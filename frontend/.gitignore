@@ -13,3 +13,19 @@
 .externalNativeBuild
 .cxx
 local.properties
+# Python
+__pycache__/
+*.pyc
+
+# Database
+*.db
+
+# Env
+.env
+
+# IDE
+.idea/
+.vscode/
+
+# Node
+node_modules/

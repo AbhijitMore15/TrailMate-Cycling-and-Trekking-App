@@ -5,12 +5,12 @@ __pycache__/
 # Database
 *.db
 
-# Environment
+# Env
 .env
 
 # IDE
 .idea/
 .vscode/
 
-# Node (if frontend uses node)
+# Node
 node_modules/
