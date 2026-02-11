@@ -1,0 +1,31 @@
+app/
+├── src/main/
+│   ├── kotlin/com/trailmate/app/
+│   │   ├── ui/
+│   │   │   ├── login/
+│   │   │   │   ├── LoginScreen.kt          ← Login UI
+│   │   │   │   └── LoginViewModel.kt       ← Login Logic
+│   │   │   ├── home/
+│   │   │   │   └── HomeScreen.kt           ← Dashboard UI
+│   │   │   └── theme/
+│   │   │       ├── Color.kt                ← Color Palette
+│   │   │       ├── Type.kt                 ← Typography
+│   │   │       └── Theme.kt                ← Material3 Theme
+│   │   ├── models/
+│   │   │   ├── LoginRequest.kt
+│   │   │   ├── LoginResponse.kt
+│   │   │   ├── RegisterRequest.kt
+│   │   │   ├── Route.kt
+│   │   │   ├── Activity.kt
+│   │   │   ├── EffortEstimation.kt
+│   │   │   └── RecommendedRoute.kt
+│   │   ├── api/
+│   │   │   └── ApiClient.kt                ← Retrofit Config
+│   │   ├── utils/
+│   │   │   └── DataStoreManager.kt         ← Token Storage
+│   │   └── MainActivity.kt                 ← App Entry Point
+│   └── res/
+│       ├── values/strings.xml              ← String Resources
+│       └── AndroidManifest.xml             ← App Config
+├── build.gradle.kts                        ← Dependencies
+└── proguard-rules.pro
