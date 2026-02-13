@@ -1,5 +1,5 @@
 from sqlalchemy import Column, Integer, Float, ForeignKey
-from ..database.db import Base
+from .database.db import Base
 
 class Activity(Base):
     __tablename__ = "activities"
