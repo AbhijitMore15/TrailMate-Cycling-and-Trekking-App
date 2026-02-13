@@ -2,11 +2,11 @@ from fastapi import APIRouter, Depends, HTTPException, Header
 from sqlalchemy.orm import Session
 from datetime import datetime
 
-from .database.db import SessionLocal
-from app.models.activity import Activity
-from app.schemas.activity_schema import ActivityCreate, ActivityOut
-from app.utils.effort import calculate_effort
-from app.utils.auth_utils import verify_token, get_token_from_header
+from ..database.db import SessionLocal
+from ..models.activity import Activity
+from ..schemas.activity_schema import ActivityCreate, ActivityOut
+from ..utils.effort import calculate_effort
+from ..utils.auth_utils import verify_token, get_token_from_header
 
 router = APIRouter()
 
