@@ -24,3 +24,8 @@ app.include_router(activity_api.router, prefix="/api")
 @app.get("/")
 def read_root():
     return {"message": "TrailMate API is running!"}
+
+@app.on_event("startup")
+def startup():
+    Base.metadata.create_all(bind=engine)
+
