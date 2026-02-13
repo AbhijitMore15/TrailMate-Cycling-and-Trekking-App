@@ -19,10 +19,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusDirection
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalFocusManager
-import androidx.compose.ui.text.input.ImeAction
-import androidx.compose.ui.text.input.KeyboardType
-import androidx.compose.ui.text.input.PasswordVisualTransformation
-import androidx.compose.ui.text.input.VisualTransformation
+import androidx.compose.ui.text.input.*
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
@@ -33,6 +30,7 @@ fun LoginScreen(
     onNavigateToRegister: () -> Unit,
     viewModel: LoginViewModel = viewModel()
 ) {
+
     var email by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
     var passwordVisible by remember { mutableStateOf(false) }
@@ -42,24 +40,27 @@ fun LoginScreen(
     val focusManager = LocalFocusManager.current
     val scrollState = rememberScrollState()
 
-    // Observe login state
     val loginState by viewModel.loginState.collectAsState()
 
     LaunchedEffect(loginState) {
-        when (loginState) {
+        when (val state = loginState) {
+
             is LoginState.Success -> {
-                val successState = loginState as LoginState.Success
                 isLoading = false
-                onLoginSuccess(successState.token, successState.userId)
+                errorMessage = ""
+                onLoginSuccess(state.token, state.userId)
             }
+
             is LoginState.Error -> {
                 isLoading = false
-                errorMessage = (loginState as LoginState.Error).message
+                errorMessage = state.message
             }
+
             is LoginState.Loading -> {
                 isLoading = true
                 errorMessage = ""
             }
+
             else -> {}
         }
     }
@@ -69,6 +70,7 @@ fun LoginScreen(
             .fillMaxSize()
             .background(Color(0xFFF5F7FA))
     ) {
+
         Column(
             modifier = Modifier
                 .fillMaxSize()
@@ -77,7 +79,8 @@ fun LoginScreen(
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.Center
         ) {
-            // App Logo / Header
+
+            // Title
             Text(
                 text = "TrailMate",
                 style = MaterialTheme.typography.headlineLarge.copy(
@@ -96,21 +99,17 @@ fun LoginScreen(
                 modifier = Modifier.padding(bottom = 40.dp)
             )
 
-            // Email Field
+            // EMAIL FIELD
             OutlinedTextField(
                 value = email,
                 onValueChange = {
-                    email = it
+                    email = it.trim()
                     if (errorMessage.isNotEmpty()) errorMessage = ""
                 },
                 label = { Text("Email") },
                 placeholder = { Text("Enter your email") },
                 leadingIcon = {
-                    Icon(
-                        Icons.Default.Email,
-                        contentDescription = "Email",
-                        tint = Color(0xFF2E7D32)
-                    )
+                    Icon(Icons.Default.Email, contentDescription = null, tint = Color(0xFF2E7D32))
                 },
                 keyboardOptions = KeyboardOptions(
                     keyboardType = KeyboardType.Email,
@@ -123,16 +122,12 @@ fun LoginScreen(
                     .fillMaxWidth()
                     .height(56.dp),
                 shape = RoundedCornerShape(8.dp),
-                colors = OutlinedTextFieldDefaults.colors(
-                    focusedBorderColor = Color(0xFF2E7D32),
-                    unfocusedBorderColor = Color(0xFFCCCCCC)
-                ),
                 singleLine = true
             )
 
             Spacer(modifier = Modifier.height(16.dp))
 
-            // Password Field
+            // PASSWORD FIELD
             OutlinedTextField(
                 value = password,
                 onValueChange = {
@@ -142,22 +137,19 @@ fun LoginScreen(
                 label = { Text("Password") },
                 placeholder = { Text("Enter your password") },
                 leadingIcon = {
-                    Icon(
-                        Icons.Default.Lock,
-                        contentDescription = "Password",
-                        tint = Color(0xFF2E7D32)
-                    )
+                    Icon(Icons.Default.Lock, contentDescription = null, tint = Color(0xFF2E7D32))
                 },
                 trailingIcon = {
                     IconButton(onClick = { passwordVisible = !passwordVisible }) {
                         Icon(
                             if (passwordVisible) Icons.Default.Visibility else Icons.Default.VisibilityOff,
-                            contentDescription = "Toggle password visibility",
+                            contentDescription = null,
                             tint = Color(0xFF2E7D32)
                         )
                     }
                 },
-                visualTransformation = if (passwordVisible) VisualTransformation.None else PasswordVisualTransformation(),
+                visualTransformation =
+                    if (passwordVisible) VisualTransformation.None else PasswordVisualTransformation(),
                 keyboardOptions = KeyboardOptions(
                     keyboardType = KeyboardType.Password,
                     imeAction = ImeAction.Done
@@ -169,33 +161,24 @@ fun LoginScreen(
                     .fillMaxWidth()
                     .height(56.dp),
                 shape = RoundedCornerShape(8.dp),
-                colors = OutlinedTextFieldDefaults.colors(
-                    focusedBorderColor = Color(0xFF2E7D32),
-                    unfocusedBorderColor = Color(0xFFCCCCCC)
-                ),
                 singleLine = true
             )
 
             Spacer(modifier = Modifier.height(8.dp))
 
-            // Forgot Password Link
+            // FORGOT PASSWORD
             Row(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.End
             ) {
-                TextButton(onClick = { /* Navigate to forgot password */ }) {
-                    Text(
-                        "Forgot Password?",
-                        style = MaterialTheme.typography.bodySmall.copy(
-                            color = Color(0xFF2E7D32)
-                        )
-                    )
+                TextButton(onClick = { }) {
+                    Text("Forgot Password?", color = Color(0xFF2E7D32))
                 }
             }
 
             Spacer(modifier = Modifier.height(16.dp))
 
-            // Error Message
+            // ERROR MESSAGE
             if (errorMessage.isNotEmpty()) {
                 Surface(
                     modifier = Modifier
@@ -206,18 +189,16 @@ fun LoginScreen(
                 ) {
                     Text(
                         text = errorMessage,
-                        style = MaterialTheme.typography.bodySmall.copy(
-                            color = Color(0xFFC62828)
-                        ),
+                        color = Color(0xFFC62828),
                         modifier = Modifier.padding(12.dp)
                     )
                 }
             }
 
-            // Login Button
+            // LOGIN BUTTON
             Button(
                 onClick = {
-                    if (email.isEmpty() || password.isEmpty()) {
+                    if (email.isBlank() || password.isBlank()) {
                         errorMessage = "Please fill in all fields"
                     } else {
                         viewModel.login(email, password)
@@ -228,11 +209,11 @@ fun LoginScreen(
                     .height(48.dp),
                 enabled = !isLoading,
                 colors = ButtonDefaults.buttonColors(
-                    containerColor = Color(0xFF2E7D32),
-                    disabledContainerColor = Color(0xFFCCCCCC)
+                    containerColor = Color(0xFF2E7D32)
                 ),
                 shape = RoundedCornerShape(8.dp)
             ) {
+
                 if (isLoading) {
                     CircularProgressIndicator(
                         modifier = Modifier.size(20.dp),
@@ -242,48 +223,21 @@ fun LoginScreen(
                 } else {
                     Text(
                         "Login",
-                        style = MaterialTheme.typography.labelLarge.copy(
-                            color = Color.White,
-                            fontSize = 16.sp
-                        )
+                        color = Color.White,
+                        fontSize = 16.sp
                     )
                 }
             }
 
             Spacer(modifier = Modifier.height(16.dp))
 
-            // Divider
+            // REGISTER LINK
             Row(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(vertical = 8.dp),
-                verticalAlignment = Alignment.CenterVertically,
-                horizontalArrangement = Arrangement.spacedBy(8.dp)
-            ) {
-                Divider(modifier = Modifier.weight(1f))
-                Text("Or", style = MaterialTheme.typography.bodySmall)
-                Divider(modifier = Modifier.weight(1f))
-            }
-
-            Spacer(modifier = Modifier.height(16.dp))
-
-            // Register Link
-            Row(
-                modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.Center,
                 verticalAlignment = Alignment.CenterVertically
             ) {
-                Text(
-                    "Don't have an account? ",
-                    style = MaterialTheme.typography.bodySmall
-                )
+                Text("Don't have an account?")
                 TextButton(onClick = onNavigateToRegister) {
-                    Text(
-                        "Register",
-                        style = MaterialTheme.typography.bodySmall.copy(
-                            color = Color(0xFF2E7D32)
-                        )
-                    )
+                    Text("Register", color = Color(0xFF2E7D32))
                 }
             }
         }

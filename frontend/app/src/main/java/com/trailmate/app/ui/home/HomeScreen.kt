@@ -20,7 +20,7 @@ import com.trailmate.app.ui.theme.PrimaryGreen
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun HomeScreen(
-    onNavigateToMap: () -> Unit,
+    onNavigateToMap: (() -> Unit)? = null,//------------------------
     onLogout: () -> Unit,
     token: String = "",
     userId: Int = 0
@@ -68,7 +68,7 @@ fun HomeScreen(
                     selected = selectedTab == 1,
                     onClick = {
                         selectedTab = 1
-                        onNavigateToMap()
+                        //onNavigateToMap()--------------------------
                     },
                     colors = NavigationBarItemDefaults.colors(
                         selectedIconColor = Color.White,

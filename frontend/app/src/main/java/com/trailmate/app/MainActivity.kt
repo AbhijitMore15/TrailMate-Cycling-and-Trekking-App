@@ -7,7 +7,8 @@ import androidx.lifecycle.lifecycleScope
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
-import com.trailmate.app.ui.map.MapScreen
+// import com.mappls.sdk.maps.Mappls   // Comment out for now
+// import com.trailmate.app.ui.map.MapScreen  // Comment out for now
 import com.trailmate.app.ui.home.HomeScreen
 import com.trailmate.app.ui.login.LoginScreen
 import com.trailmate.app.ui.login.RegisterScreen
@@ -22,7 +23,9 @@ class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        // ✅ DataStore Init
+        // Comment out Mappls init for now
+        // Mappls.getInstance(applicationContext)
+
         dataStoreManager = DataStoreManager(this)
 
         setContent {
@@ -32,10 +35,10 @@ class MainActivity : ComponentActivity() {
 
                 NavHost(
                     navController = navController,
-                    startDestination = "login"   // 🔥 Stable base (No auto login)
+                    startDestination = "login"
                 ) {
 
-                    // ✅ LOGIN
+                    // LOGIN
                     composable("login") {
                         LoginScreen(
                             onLoginSuccess = { token, userId ->
@@ -55,7 +58,7 @@ class MainActivity : ComponentActivity() {
                         )
                     }
 
-                    // ✅ REGISTER
+                    // REGISTER
                     composable("register") {
                         RegisterScreen(
                             onRegisterSuccess = { token, userId ->
@@ -75,12 +78,13 @@ class MainActivity : ComponentActivity() {
                         )
                     }
 
-                    // ✅ HOME
+                    // HOME
                     composable("home") {
                         HomeScreen(
-                            onNavigateToMap = {
-                                navController.navigate("map")
-                            },
+                            // Map navigation removed for now
+                            // onNavigateToMap = {
+                            //     navController.navigate("map")
+                            // },
                             onLogout = {
                                 lifecycleScope.launch {
                                     dataStoreManager.clearAllData()
@@ -95,12 +99,16 @@ class MainActivity : ComponentActivity() {
                         )
                     }
 
-                    // 🗺️ MAP SCREEN
-                    composable("map") {
-                        MapScreen()
-                    }
+                    // MAP SCREEN - REMOVED FOR NOW
+                    // Will add back later after other features
+                    // composable("map") {
+                    //     MapScreen(
+                    //         latitude = 28.6139,
+                    //         longitude = 77.2090,
+                    //         zoomLevel = 12.0
+                    //     )
+                    // }
 
-                    // Other screens
                     composable("tracking") { }
 
                     composable("activity_history") { }

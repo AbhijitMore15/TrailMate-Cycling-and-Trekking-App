@@ -18,7 +18,7 @@ interface AuthApiService {
 
 object ApiClient {
 
-    private const val BASE_URL = "http://10.0.2.2:8000/api/"
+    // private const val BASE_URL = "http://10.0.2.2:8000/api/"
 
     private val okHttpClient = OkHttpClient.Builder()
         .connectTimeout(30, TimeUnit.SECONDS)
@@ -27,7 +27,7 @@ object ApiClient {
         .build()
 
     private val retrofit = Retrofit.Builder()
-        .baseUrl(BASE_URL)
+        .baseUrl("http://127.0.0.1:8000/api/")
         .addConverterFactory(GsonConverterFactory.create())
         .client(okHttpClient)
         .build()

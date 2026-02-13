@@ -1,0 +1,137 @@
+[
+  {
+    "id": 1,
+    "name": "Water Bottle",
+    "category": "Hydration",
+    "activity": ["trekking", "cycling"],
+    "difficulty": ["beginner", "intermediate", "advanced"],
+    "duration_min_hours": 1,
+    "priority": "essential"
+  },
+  {
+    "id": 2,
+    "name": "Energy Bars",
+    "category": "Food",
+    "activity": ["trekking", "cycling"],
+    "difficulty": ["beginner", "intermediate", "advanced"],
+    "duration_min_hours": 2,
+    "priority": "recommended"
+  },
+  {
+    "id": 3,
+    "name": "Basic First Aid Kit",
+    "category": "Safety",
+    "activity": ["trekking", "cycling"],
+    "difficulty": ["beginner", "intermediate", "advanced"],
+    "duration_min_hours": 1,
+    "priority": "essential"
+  },
+  {
+    "id": 4,
+    "name": "Helmet",
+    "category": "Safety",
+    "activity": ["cycling"],
+    "difficulty": ["beginner", "intermediate", "advanced"],
+    "duration_min_hours": 1,
+    "priority": "essential"
+  },
+  {
+    "id": 5,
+    "name": "Repair Kit",
+    "category": "Repair",
+    "activity": ["cycling"],
+    "difficulty": ["beginner", "intermediate", "advanced"],
+    "duration_min_hours": 2,
+    "priority": "recommended"
+  },
+  {
+    "id": 6,
+    "name": "Mini Pump",
+    "category": "Repair",
+    "activity": ["cycling"],
+    "difficulty": ["intermediate", "advanced"],
+    "duration_min_hours": 2,
+    "priority": "recommended"
+  },
+  {
+    "id": 7,
+    "name": "Extra Tube",
+    "category": "Repair",
+    "activity": ["cycling"],
+    "difficulty": ["intermediate", "advanced"],
+    "duration_min_hours": 3,
+    "priority": "recommended"
+  },
+  {
+    "id": 8,
+    "name": "Trekking Poles",
+    "category": "Support",
+    "activity": ["trekking"],
+    "difficulty": ["intermediate", "advanced"],
+    "duration_min_hours": 3,
+    "priority": "recommended"
+  },
+  {
+    "id": 9,
+    "name": "Emergency Whistle",
+    "category": "Safety",
+    "activity": ["trekking"],
+    "difficulty": ["beginner", "intermediate", "advanced"],
+    "duration_min_hours": 2,
+    "priority": "essential"
+  },
+  {
+    "id": 10,
+    "name": "Headlamp",
+    "category": "Navigation",
+    "activity": ["trekking"],
+    "difficulty": ["intermediate", "advanced"],
+    "duration_min_hours": 4,
+    "priority": "recommended"
+  },
+  {
+    "id": 11,
+    "name": "Rain Jacket",
+    "category": "Clothing",
+    "activity": ["trekking", "cycling"],
+    "difficulty": ["beginner", "intermediate", "advanced"],
+    "duration_min_hours": 2,
+    "priority": "recommended"
+  },
+  {
+    "id": 12,
+    "name": "Power Bank",
+    "category": "Electronics",
+    "activity": ["trekking", "cycling"],
+    "difficulty": ["intermediate", "advanced"],
+    "duration_min_hours": 3,
+    "priority": "recommended"
+  },
+  {
+    "id": 13,
+    "name": "Climbing Rope",
+    "category": "Safety",
+    "activity": ["trekking"],
+    "difficulty": ["advanced"],
+    "duration_min_hours": 5,
+    "priority": "optional"
+  },
+  {
+    "id": 14,
+    "name": "Thermal Wear",
+    "category": "Clothing",
+    "activity": ["trekking"],
+    "difficulty": ["intermediate", "advanced"],
+    "duration_min_hours": 4,
+    "priority": "recommended"
+  },
+  {
+    "id": 15,
+    "name": "GPS Emergency Beacon",
+    "category": "Safety",
+    "activity": ["trekking"],
+    "difficulty": ["advanced"],
+    "duration_min_hours": 6,
+    "priority": "optional"
+  }
+]
