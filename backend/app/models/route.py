@@ -1,5 +1,5 @@
 from sqlalchemy import Column, Integer, String, Float
-from app.database.db import Base
+from ..database.db import Base
 
 class Route(Base):
     __tablename__ = "routes"

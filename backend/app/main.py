@@ -1,11 +1,12 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from app.database.db import Base, engine
-
 from app.routes import auth, routes_api, activity_api
 from app.routes.equipment import router as equipment_router
 from app.routes.calories import router as calories_router
 from app.routes import stats
+from .database.db import Base, engine
+from .routes import auth, routes_api, activity_api
 
 Base.metadata.create_all(bind=engine)
 
@@ -33,3 +34,9 @@ app.include_router(stats.router, prefix="/api/stats", tags=["Stats"])
 @app.get("/")
 def root():
     return {"message": "TrailMate API running"}
+
+def read_root():
+    return {"message": "TrailMate API is running!"}
+@app.on_event("startup")
+def startup():
+    Base.metadata.create_all(bind=engine)
