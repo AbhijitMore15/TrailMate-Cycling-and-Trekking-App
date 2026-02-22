@@ -1,9 +1,8 @@
 plugins {
     id("com.android.application")
     id("org.jetbrains.kotlin.android")
-    id("org.jetbrains.kotlin.plugin.compose")   // ⭐ REQUIRED FOR KOTLIN 2.0+
-    // Mappls services Gradle plugin (required when using .a.conf / .a.olf configuration)
-    id("com.mappls.services.android")
+    id("org.jetbrains.kotlin.plugin.compose")   // Required for Kotlin 2.x
+    //id("com.mappls.services.android")           // Mappls SDK plugin
 }
 
 android {
@@ -20,25 +19,39 @@ android {
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
 
+    buildTypes {
+        release {
+            isMinifyEnabled = false
+            proguardFiles(
+                getDefaultProguardFile("proguard-android-optimize.txt"),
+                "proguard-rules.pro"
+            )
+        }
+    }
+
     buildFeatures {
-        compose = true   // ⭐ REQUIRED
+        compose = true
+    }
+
+    composeOptions {
+        kotlinCompilerExtensionVersion = "1.5.14"
     }
 
     compileOptions {
-        sourceCompatibility = JavaVersion.VERSION_11
-        targetCompatibility = JavaVersion.VERSION_11
+        sourceCompatibility = JavaVersion.VERSION_17
+        targetCompatibility = JavaVersion.VERSION_17
     }
 
     kotlinOptions {
-        jvmTarget = "11"
+        jvmTarget = "17"
     }
 }
 
 dependencies {
 
-    // ---------- MAPPLS MAP SDK ----------
-    // Use explicit version; repo is already declared in settings.gradle.kts
-    implementation("com.mappls.sdk:mappls-android-sdk:9.0.0")
+    // ---------- MAP ENGINES ----------
+    //implementation("com.mappls.sdk:mappls-android-sdk:9.0.0")
+    implementation("org.osmdroid:osmdroid-android:6.1.18") // free offline maps
 
     // ---------- CORE ----------
     implementation("androidx.core:core-ktx:1.12.0")
@@ -51,16 +64,17 @@ dependencies {
     implementation("androidx.compose.ui:ui-graphics")
     implementation("androidx.compose.ui:ui-tooling-preview")
     implementation("androidx.compose.material3:material3")
-    // Material icons (Filled, e.g. Map, Logout, DirectionsRun)
     implementation("androidx.compose.material:material-icons-extended")
 
     // ---------- NAVIGATION ----------
     implementation("androidx.navigation:navigation-compose:2.7.7")
 
+    // ---------- VIEWMODEL ----------
+    implementation("androidx.lifecycle:lifecycle-viewmodel-compose:2.7.0")
+
     // ---------- NETWORK ----------
     implementation("com.squareup.retrofit2:retrofit:2.10.0")
     implementation("com.squareup.retrofit2:converter-gson:2.10.0")
-
     implementation("com.squareup.okhttp3:okhttp:4.11.0")
     implementation("com.squareup.okhttp3:logging-interceptor:4.11.0")
 
@@ -76,13 +90,8 @@ dependencies {
     // ---------- DATASTORE ----------
     implementation("androidx.datastore:datastore-preferences:1.0.0")
 
-    // ---------- VIEWMODEL ----------
-    implementation("androidx.lifecycle:lifecycle-viewmodel-compose:2.7.0")
-
     // ---------- TEST ----------
     testImplementation("junit:junit:4.13.2")
-
-    // Instrumentation / UI tests
     androidTestImplementation("androidx.test.ext:junit:1.1.5")
     androidTestImplementation("androidx.test.espresso:espresso-core:3.5.1")
 }

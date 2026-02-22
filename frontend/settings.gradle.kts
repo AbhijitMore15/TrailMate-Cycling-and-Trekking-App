@@ -14,10 +14,6 @@ dependencyResolutionManagement {
         google()
         mavenCentral()
 
-        // ⭐ Mappls / MapMyIndia Maven repository
-        maven {
-            url = uri("https://maven.mappls.com/repository/mappls/")
-        }
     }
 }
 

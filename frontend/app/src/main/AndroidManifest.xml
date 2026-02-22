@@ -1,35 +1,73 @@
 <?xml version="1.0" encoding="utf-8"?>
+
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools">
+    xmlns:tools="http://schemas.android.com/tools"
+    package="com.trailmate.app">
 
-    <uses-permission android:name="android.permission.INTERNET" />
-    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
-    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
-    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
-    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+    <!-- INTERNET -->
+    <uses-permission android:name="android.permission.INTERNET"/>
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
 
-    <!-- ✅ Add android:name attribute pointing to MyApplication -->
+    <!-- LOCATION -->
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"/>
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION"/>
+
+    <!-- STORAGE (for offline maps, only for old Android) -->
+    <uses-permission
+        android:name="android.permission.WRITE_EXTERNAL_STORAGE"
+        android:maxSdkVersion="32"/>
+    <uses-permission
+        android:name="android.permission.READ_EXTERNAL_STORAGE"
+        android:maxSdkVersion="32"/>
+
+    <!-- ================= APPLICATION ================= -->
     <application
         android:name=".TrailMateApplication"
         android:allowBackup="true"
-        android:dataExtractionRules="@xml/data_extraction_rules"
-        android:fullBackupContent="@xml/backup_rules"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
-        android:supportsRtl="true"
         android:theme="@style/Theme.TrailMate"
+        android:supportsRtl="true"
         android:usesCleartextTraffic="true"
         tools:targetApi="31">
 
+        <!-- MAPPLS SDK KEYS -->
+        <meta-data
+            android:name="com.mappls.sdk.maps.SDK_KEY"
+            android:value="46d7a89fcb022c054371f24102357d9f"/>
+
+        <meta-data
+            android:name="com.mappls.sdk.auth.CLIENT_ID"
+            android:value="96dHVzAsuu08A65A6BNV_TptiHlFNcAh0Z"/>
+
+        <meta-data
+            android:name="com.mappls.sdk.auth.CLIENT_SECRET"
+            android:value="lrFxl-lSEg9jel9co-XF-UhKzTqlJnqYOUGfrs-Sp"/>
+
+        <meta-data
+            android:name="com.mappls.sdk.clientId"
+            android:value="96dHZVzsAuuo8A65A6BNV_TptiHlFNcAh0ZiBWo8b7GgjEjy852NkhlhoRWwbBj1Nn-668szZ4opI6DF8GBv4g=="/>
+
+        <meta-data
+            android:name="com.mappls.sdk.clientSecret"
+            android:value="lrFxI-iSEg9JeI9co-XF-UhkzTqIJnqYOUGfrs-Sp6x9mANbrFgDnmQRiGqtkIXV21nTzEX15iQq11YFlemk2NBmUBe8sDQB"/>
+
+        <meta-data
+            android:name="com.mappls.sdk.restAPIKey"
+            android:value="46d7a89fcb022c054371f24102357d9f"/>
+
+
+        <!-- MAIN ACTIVITY -->
         <activity
             android:name=".MainActivity"
             android:exported="true"
-            android:label="@string/app_name"
             android:theme="@style/Theme.TrailMate">
+
             <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-                <category android:name="android.intent.category.LAUNCHER" />
+                <action android:name="android.intent.action.MAIN"/>
+                <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
+
         </activity>
 
     </application>

@@ -133,5 +133,95 @@
     "difficulty": ["advanced"],
     "duration_min_hours": 6,
     "priority": "optional"
+  },
+  {
+    "id": 16,
+    "name": "Hiking Boots",
+    "category": "Footwear",
+    "activity": ["trekking"],
+    "difficulty": ["beginner", "intermediate", "advanced"],
+    "duration_min_hours": 1,
+    "priority": "essential"
+  },
+  {
+    "id": 17,
+    "name": "Backpack",
+    "category": "Gear",
+    "activity": ["trekking", "cycling"],
+    "difficulty": ["beginner", "intermediate", "advanced"],
+    "duration_min_hours": 1,
+    "priority": "essential"
+  },
+  {
+    "id": 18,
+    "name": "Sunscreen",
+    "category": "Protection",
+    "activity": ["trekking", "cycling"],
+    "difficulty": ["beginner", "intermediate", "advanced"],
+    "duration_min_hours": 1,
+    "priority": "recommended"
+  },
+  {
+    "id": 19,
+    "name": "Map and Compass",
+    "category": "Navigation",
+    "activity": ["trekking"],
+    "difficulty": ["intermediate", "advanced"],
+    "duration_min_hours": 2,
+    "priority": "recommended"
+  },
+  {
+    "id": 20,
+    "name": "Cycling Gloves",
+    "category": "Safety",
+    "activity": ["cycling"],
+    "difficulty": ["beginner", "intermediate", "advanced"],
+    "duration_min_hours": 1,
+    "priority": "recommended"
+  },
+  {
+    "id": 21,
+    "name": "Knee and Elbow Pads",
+    "category": "Safety",
+    "activity": ["cycling"],
+    "difficulty": ["beginner", "intermediate", "advanced"],
+    "duration_min_hours": 1,
+    "priority": "recommended"
+  },
+  {
+    "id": 22,
+    "name": "Insect Repellent",
+    "category": "Protection",
+    "activity": ["trekking"],
+    "difficulty": ["beginner", "intermediate", "advanced"],
+    "duration_min_hours": 2,
+    "priority": "recommended"
+  },
+  {
+    "id": 23,
+    "name": "Multi-tool",
+    "category": "Repair",
+    "activity": ["trekking", "cycling"],
+    "difficulty": ["intermediate", "advanced"],
+    "duration_min_hours": 3,
+    "priority": "recommended"
+  },
+  {
+    "id": 24,
+    "name": "Portable Water Filter",
+    "category": "Hydration",
+    "activity": ["trekking"],
+    "difficulty": ["intermediate", "advanced"],
+    "duration_min_hours": 4,
+    "priority": "recommended"
+  },
+  {
+    "id": 25,
+    "name": "Compression Bandage",
+    "category": "Safety",
+    "activity": ["trekking", "cycling"],
+    "difficulty": ["beginner", "intermediate", "advanced"],
+    "duration_min_hours": 1,
+    "priority": "recommended"
   }
 ]

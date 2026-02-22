@@ -1,13 +1,18 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from app.database.db import Base, engine
+
 from app.routes import auth, routes_api, activity_api
+from app.routes.equipment import router as equipment_router
+from app.routes.calories import router as calories_router
+from app.routes import stats
 
 Base.metadata.create_all(bind=engine)
 
 app = FastAPI(title="TrailMate API")
 
-# Add CORS middleware
+# ================= CORS =================
+
 app.add_middleware(
     CORSMiddleware,
     allow_origins=["*"],
@@ -16,11 +21,15 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-# Include routers with API prefix
+# ================= ROUTERS =================
+
 app.include_router(auth.router, prefix="/api/auth")
 app.include_router(routes_api.router, prefix="/api")
 app.include_router(activity_api.router, prefix="/api")
+app.include_router(equipment_router, prefix="/api/equipment")
+app.include_router(calories_router, prefix="/api/calories")
+app.include_router(stats.router, prefix="/api/stats", tags=["Stats"])
 
 @app.get("/")
-def read_root():
-    return {"message": "TrailMate API is running!"}
+def root():
+    return {"message": "TrailMate API running"}

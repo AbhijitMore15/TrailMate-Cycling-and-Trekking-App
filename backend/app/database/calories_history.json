@@ -1,0 +1,154 @@
+[
+    {
+        "user_id": 2,
+        "activity": "trekking",
+        "weight": 70.0,
+        "duration": 2.0,
+        "distance": 5.0,
+        "calories": 1820.0
+    },
+    {
+        "user_id": 2,
+        "activity": "cycling",
+        "weight": 70.0,
+        "duration": 2.0,
+        "distance": 5.0,
+        "calories": 1400.0
+    },
+    {
+        "user_id": 2,
+        "activity": "cycling",
+        "weight": 70.0,
+        "duration": 2.0,
+        "distance": 6.0,
+        "calories": 1470.0
+    },
+    {
+        "user_id": 2,
+        "activity": "cycling",
+        "weight": 65.0,
+        "duration": 2.0,
+        "distance": 6.0,
+        "calories": 1365.0
+    },
+    {
+        "user_id": 2,
+        "activity": "cycling",
+        "weight": 64.0,
+        "duration": 2.0,
+        "distance": 6.0,
+        "calories": 1344.0
+    },
+    {
+        "user_id": 2,
+        "activity": "cycling",
+        "weight": 63.0,
+        "duration": 2.0,
+        "distance": 4.0,
+        "calories": 1197.0
+    },
+    {
+        "user_id": 2,
+        "activity": "cycling",
+        "weight": 61.0,
+        "duration": 2.0,
+        "distance": 4.0,
+        "calories": 1159.0
+    },
+    {
+        "user_id": 2,
+        "activity": "trekking",
+        "weight": 61.0,
+        "duration": 2.0,
+        "distance": 4.0,
+        "calories": 1427.4
+    },
+    {
+        "user_id": 2,
+        "activity": "trekking",
+        "weight": 60.0,
+        "duration": 2.0,
+        "distance": 4.0,
+        "calories": 1404.0
+    },
+    {
+        "user_id": 2,
+        "activity": "trekking",
+        "weight": 70.0,
+        "duration": 2.0,
+        "distance": 5.0,
+        "calories": 1820.0
+    },
+    {
+        "user_id": 2,
+        "activity": "trekking",
+        "weight": 70.0,
+        "duration": 2.0,
+        "distance": 5.0,
+        "calories": 1820.0
+    },
+    {
+        "user_id": 2,
+        "activity": "trekking",
+        "weight": 70.0,
+        "duration": 2.0,
+        "distance": 5.0,
+        "calories": 1820.0
+    },
+    {
+        "user_id": 2,
+        "activity": "trekking",
+        "weight": 70.0,
+        "duration": 2.0,
+        "distance": 5.0,
+        "calories": 1820.0
+    },
+    {
+        "user_id": 2,
+        "activity": "trekking",
+        "weight": 70.0,
+        "duration": 2.0,
+        "distance": 2.0,
+        "calories": 1274.0
+    },
+    {
+        "user_id": 2,
+        "activity": "trekking",
+        "weight": 70.0,
+        "duration": 2.0,
+        "distance": 4.0,
+        "calories": 1638.0
+    },
+    {
+        "user_id": 2,
+        "activity": "trekking",
+        "weight": 70.0,
+        "duration": 2.0,
+        "distance": 1.0,
+        "calories": 1092.0
+    },
+    {
+        "user_id": 2,
+        "activity": "trekking",
+        "weight": 70.0,
+        "duration": 2.0,
+        "distance": 5.0,
+        "calories": 1820.0
+    },
+    {
+        "user_id": 2,
+        "activity": "cycling",
+        "weight": 70.0,
+        "duration": 2.0,
+        "distance": 1.0,
+        "calories": 1120.0
+    },
+    {
+        "user_id": 2,
+        "activity": "cycling",
+        "weight": 70.0,
+        "duration": 2.0,
+        "distance": 5.0,
+        "calories": 1400.0
+    }
+]

@@ -2,96 +2,116 @@ package com.trailmate.app.utils
 
 import android.content.Context
 import androidx.datastore.core.DataStore
-import androidx.datastore.preferences.core.Preferences
-import androidx.datastore.preferences.core.edit
-import androidx.datastore.preferences.core.stringPreferencesKey
-import androidx.datastore.preferences.core.intPreferencesKey
+import androidx.datastore.preferences.core.*
 import androidx.datastore.preferences.preferencesDataStore
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.firstOrNull
+import com.trailmate.app.models.User
 
-// Extension property to access DataStore
-private val Context.dataStore: DataStore<Preferences> by preferencesDataStore(name = "trailmate_prefs")
+// ================= DATASTORE EXTENSION =================
+private val Context.dataStore: DataStore<Preferences> by preferencesDataStore(
+    name = "trailmate_prefs"
+)
 
+// ================= CLASS =================
 class DataStoreManager(private val context: Context) {
 
     companion object {
+
+        // AUTH
         private val AUTH_TOKEN_KEY = stringPreferencesKey("auth_token")
         private val USER_ID_KEY = intPreferencesKey("user_id")
         private val USER_EMAIL_KEY = stringPreferencesKey("user_email")
         private val USER_NAME_KEY = stringPreferencesKey("user_name")
         private val FITNESS_LEVEL_KEY = stringPreferencesKey("fitness_level")
+
+        // PROFILE
+        private val HEIGHT_KEY = stringPreferencesKey("height")
+        private val WEIGHT_KEY = stringPreferencesKey("weight")
+        private val GOAL_KEY = stringPreferencesKey("goal")
     }
 
-    // Save authentication token
+    // =====================================================
+    // AUTH SECTION
+    // =====================================================
+
     suspend fun saveAuthToken(token: String) {
-        context.dataStore.edit { preferences ->
-            preferences[AUTH_TOKEN_KEY] = token
-        }
+        context.dataStore.edit { it[AUTH_TOKEN_KEY] = token }
     }
 
-    // Get authentication token
-    fun getAuthToken(): Flow<String?> = context.dataStore.data.map { preferences ->
-        preferences[AUTH_TOKEN_KEY]
-    }
+    val tokenFlow: Flow<String?> =
+        context.dataStore.data.map { it[AUTH_TOKEN_KEY] }
 
-    // Save user ID
     suspend fun saveUserId(userId: Int) {
-        context.dataStore.edit { preferences ->
-            preferences[USER_ID_KEY] = userId
-        }
+        context.dataStore.edit { it[USER_ID_KEY] = userId }
     }
 
-    // Get user ID
-    fun getUserId(): Flow<Int?> = context.dataStore.data.map { preferences ->
-        preferences[USER_ID_KEY]
-    }
+    // ⭐ THIS FIXES YOUR ERROR
+    val userIdFlow: Flow<Int?> =
+        context.dataStore.data.map { it[USER_ID_KEY] }
 
-    // Save user email
     suspend fun saveUserEmail(email: String) {
-        context.dataStore.edit { preferences ->
-            preferences[USER_EMAIL_KEY] = email
-        }
+        context.dataStore.edit { it[USER_EMAIL_KEY] = email }
     }
 
-    // Get user email
-    fun getUserEmail(): Flow<String?> = context.dataStore.data.map { preferences ->
-        preferences[USER_EMAIL_KEY]
-    }
+    val emailFlow: Flow<String?> =
+        context.dataStore.data.map { it[USER_EMAIL_KEY] }
 
-    // Save user name
     suspend fun saveUserName(name: String) {
-        context.dataStore.edit { preferences ->
-            preferences[USER_NAME_KEY] = name
-        }
+        context.dataStore.edit { it[USER_NAME_KEY] = name }
     }
 
-    // Get user name
-    fun getUserName(): Flow<String?> = context.dataStore.data.map { preferences ->
-        preferences[USER_NAME_KEY]
-    }
+    val userNameFlow: Flow<String?> =
+        context.dataStore.data.map { it[USER_NAME_KEY] }
 
-    // Save fitness level
     suspend fun saveFitnessLevel(level: String) {
-        context.dataStore.edit { preferences ->
-            preferences[FITNESS_LEVEL_KEY] = level
+        context.dataStore.edit { it[FITNESS_LEVEL_KEY] = level }
+    }
+
+    val fitnessLevelFlow: Flow<String?> =
+        context.dataStore.data.map { it[FITNESS_LEVEL_KEY] }
+
+    // =====================================================
+    // PROFILE SECTION
+    // =====================================================
+
+    suspend fun saveProfile(
+        name: String,
+        height: String,
+        weight: String,
+        goal: String
+    ) {
+        context.dataStore.edit {
+            it[USER_NAME_KEY] = name
+            it[HEIGHT_KEY] = height
+            it[WEIGHT_KEY] = weight
+            it[GOAL_KEY] = goal
         }
     }
 
-    // Get fitness level
-    fun getFitnessLevel(): Flow<String?> = context.dataStore.data.map { preferences ->
-        preferences[FITNESS_LEVEL_KEY]
-    }
+    val profileFlow: Flow<User> =
+        context.dataStore.data.map {
+            User(
+                name = it[USER_NAME_KEY] ?: "",
+                height = it[HEIGHT_KEY] ?: "",
+                weight = it[WEIGHT_KEY] ?: "",
+                goal = it[GOAL_KEY] ?: ""
+            )
+        }
 
-    // Clear all user data (on logout)
+    // =====================================================
+    // SYSTEM SECTION
+    // =====================================================
+
     suspend fun clearAllData() {
-        context.dataStore.edit { preferences ->
-            preferences.clear()
-        }
+        context.dataStore.edit { it.clear() }
     }
 
-    // Check if user is logged in
-    fun isLoggedIn(): Flow<Boolean> = context.dataStore.data.map { preferences ->
-        preferences[AUTH_TOKEN_KEY] != null
+    val isLoggedInFlow: Flow<Boolean> =
+        context.dataStore.data.map { it[AUTH_TOKEN_KEY] != null }
+
+    suspend fun getAuthTokenOnce(): String? {
+        return tokenFlow.firstOrNull()
     }
 }

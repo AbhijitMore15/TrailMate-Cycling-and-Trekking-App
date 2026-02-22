@@ -6,12 +6,11 @@ import androidx.lifecycle.viewModelScope
 import com.google.gson.Gson
 import com.trailmate.app.api.ApiClient
 import com.trailmate.app.models.RegisterRequest
+import com.trailmate.app.models.RegisterResponse
+import com.trailmate.app.models.ErrorResponse
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
-
-// ⭐ SAME Error Model (Can reuse from Login if you move to common file)
-import com.trailmate.app.models.ErrorResponse
 
 sealed class RegisterState {
     object Idle : RegisterState()
@@ -24,6 +23,7 @@ class RegisterViewModel : ViewModel() {
 
     private val _registerState = MutableStateFlow<RegisterState>(RegisterState.Idle)
     val registerState: StateFlow<RegisterState> = _registerState
+
 
     fun register(
         name: String,
@@ -38,53 +38,52 @@ class RegisterViewModel : ViewModel() {
 
                 _registerState.value = RegisterState.Loading
 
+                // ---------- REQUEST ----------
                 val request = RegisterRequest(
+                    name = name,
                     email = email,
                     password = password,
-                    name = name,
                     fitnessLevel = fitnessLevel
                 )
 
-                Log.d("RegisterVM", "Making register API call")
+                Log.d("REGISTER", "Request = $request")
 
+                // ---------- API ----------
                 val response = ApiClient.authApi.register(request)
 
-                Log.d("RegisterVM", "Response code: ${response.code()}")
+                Log.d("REGISTER", "Code = ${response.code()}")
 
+                // ---------- SUCCESS ----------
                 if (response.isSuccessful && response.body() != null) {
 
-                    val body = response.body()!!
-
-                    Log.d("RegisterVM", "Registration successful")
+                    val body: RegisterResponse = response.body()!!
 
                     _registerState.value = RegisterState.Success(
                         token = body.token,
                         userId = body.userId
                     )
+                }
 
-                } else {
+                // ---------- ERROR ----------
+                else {
 
-                    val rawError = response.errorBody()?.string()
+                    val raw = response.errorBody()?.string()
 
-                    Log.e("RegisterVM", "Raw error: $rawError")
-
-                    val cleanMessage = try {
-                        val parsed = Gson().fromJson(rawError, ErrorResponse::class.java)
-                        parsed.detail
-                    } catch (e: Exception) {
+                    val message = try {
+                        Gson().fromJson(raw, ErrorResponse::class.java).detail
+                    } catch (_: Exception) {
                         "Registration failed"
                     }
 
-                    _registerState.value = RegisterState.Error(cleanMessage)
+                    _registerState.value = RegisterState.Error(message)
                 }
 
             } catch (e: Exception) {
 
-                Log.e("RegisterVM", "Exception: ${e.message}", e)
+                Log.e("REGISTER", "Exception = ${e.message}")
 
-                _registerState.value = RegisterState.Error(
-                    e.message ?: "Unexpected error"
-                )
+                _registerState.value =
+                    RegisterState.Error(e.message ?: "Unexpected error")
             }
         }
     }
