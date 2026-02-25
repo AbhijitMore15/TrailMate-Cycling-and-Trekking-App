@@ -150,5 +150,37 @@
         "duration": 2.0,
         "distance": 5.0,
         "calories": 1400.0
+    },
+    {
+        "user_id": 2,
+        "activity": "trekking",
+        "weight": 70.0,
+        "duration": 2.0,
+        "distance": 3.0,
+        "calories": 1456.0
+    },
+    {
+        "user_id": 2,
+        "activity": "trekking",
+        "weight": 70.0,
+        "duration": 2.0,
+        "distance": 5.0,
+        "calories": 1820.0
+    },
+    {
+        "user_id": 2,
+        "activity": "trekking",
+        "weight": 70.0,
+        "duration": 2.0,
+        "distance": 5.0,
+        "calories": 1820.0
+    },
+    {
+        "user_id": 2,
+        "activity": "trekking",
+        "weight": 70.0,
+        "duration": 2.0,
+        "distance": 5.0,
+        "calories": 1820.0
     }
 ]

@@ -2,13 +2,18 @@ package com.trailmate.app.ui.home
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.lazy.grid.*
+import androidx.compose.foundation.lazy.grid.GridCells
+import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
+import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.*
+import androidx.compose.material.icons.automirrored.filled.Logout
+import androidx.compose.material.icons.filled.Check
+import androidx.compose.material.icons.filled.Edit
+import androidx.compose.material.icons.filled.Person
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -22,7 +27,7 @@ import kotlinx.coroutines.launch
 import java.time.LocalDate
 import com.trailmate.app.utils.DataStoreManager
 
-
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ProfileTab(
     modifier: Modifier = Modifier,
@@ -37,26 +42,31 @@ fun ProfileTab(
     val scope = rememberCoroutineScope()
 
     var height by remember { mutableStateOf("") }
+    var heightUnit by remember { mutableStateOf("cm") }
     var weight by remember { mutableStateOf("") }
-    var goal by remember { mutableStateOf("") }
+    var goal by remember { mutableStateOf("Gain Strength") }
 
     var isEditing by remember { mutableStateOf(true) }
     var isSaved by remember { mutableStateOf(false) }
 
+    // 🔥 New Calendar Note States
+    var selectedDate by remember { mutableStateOf<Int?>(null) }
+    var noteText by remember { mutableStateOf("") }
+    var showSheet by remember { mutableStateOf(false) }
+
+    val notes by dataStore.notesFlow.collectAsState(initial = emptyMap())
     val today = LocalDate.now().dayOfMonth
 
-    // LOAD LOCAL PROFILE DATA
     LaunchedEffect(Unit) {
         dataStore.profileFlow.collect {
             height = it.height ?: ""
             weight = it.weight ?: ""
-            goal = it.goal ?: ""
+            goal = it.goal ?: "Gain Strength"
 
             isSaved = height.isNotBlank()
             isEditing = height.isBlank()
         }
     }
-
 
     Column(
         modifier = modifier
@@ -69,7 +79,7 @@ fun ProfileTab(
         Box(
             Modifier
                 .fillMaxWidth()
-                .height(190.dp)
+                .height(200.dp)
                 .background(
                     Brush.verticalGradient(
                         listOf(Color(0xFF2E7D32), Color(0xFF66BB6A))
@@ -77,7 +87,7 @@ fun ProfileTab(
                 )
         ) {
 
-            if (isSaved) {
+            if (isSaved && !isEditing) {
                 IconButton(
                     onClick = {
                         isEditing = true
@@ -97,9 +107,14 @@ fun ProfileTab(
                 Surface(
                     shape = CircleShape,
                     color = Color.White,
-                    modifier = Modifier.size(90.dp)
+                    modifier = Modifier.size(100.dp)
                 ) {
-                    Icon(Icons.Default.Person, null, Modifier.padding(20.dp))
+                    Icon(
+                        Icons.Default.Person,
+                        null,
+                        modifier = Modifier.padding(25.dp),
+                        tint = Color.DarkGray
+                    )
                 }
 
                 Spacer(Modifier.height(12.dp))
@@ -112,73 +127,134 @@ fun ProfileTab(
             }
         }
 
+        Spacer(Modifier.height(16.dp))
 
         Column(
-            Modifier.padding(16.dp),
-            verticalArrangement = Arrangement.spacedBy(14.dp)
+            Modifier.padding(horizontal = 16.dp),
+            verticalArrangement = Arrangement.spacedBy(16.dp)
         ) {
 
-            // ================= PROFILE CARD =================
-            Card(
-                shape = RoundedCornerShape(18.dp),
-                elevation = CardDefaults.cardElevation(6.dp)
-            ) {
+            // ================= DISPLAY MODE =================
+            if (isSaved && !isEditing) {
 
-                Column(Modifier.padding(18.dp)) {
-
-                    // ---------- DISPLAY MODE ----------
-                    if (isSaved && !isEditing) {
-
-                        ProfileItem("Name", name)
-                        ProfileItem("Height", height)
-                        ProfileItem("Weight", weight)
+                Card(
+                    shape = RoundedCornerShape(16.dp),
+                    modifier = Modifier.fillMaxWidth()
+                ) {
+                    Column(Modifier.padding(16.dp)) {
+                        ProfileItem("Height", "$height $heightUnit")
+                        ProfileItem("Weight", "$weight kg")
                         ProfileItem("Goal", goal)
                     }
+                }
+            }
 
-                    // ---------- EDIT MODE ----------
-                    else {
+            // ================= EDIT MODE =================
+            else {
 
-                        OutlinedTextField(
-                            value = name,
-                            onValueChange = {},
-                            enabled = false,
-                            label = { Text("Name (from account)") },
-                            modifier = Modifier.fillMaxWidth()
-                        )
+                Card(
+                    shape = RoundedCornerShape(16.dp),
+                    modifier = Modifier.fillMaxWidth()
+                ) {
+                    Column(Modifier.padding(16.dp)) {
 
-                        Spacer(Modifier.height(10.dp))
+                        // HEIGHT
+                        Text("Height", style = MaterialTheme.typography.labelMedium)
 
-                        OutlinedTextField(
-                            value = height,
-                            onValueChange = { height = it },
-                            label = { Text("Height") },
-                            modifier = Modifier.fillMaxWidth()
-                        )
+                        Row(verticalAlignment = Alignment.CenterVertically) {
 
-                        Spacer(Modifier.height(10.dp))
+                            OutlinedTextField(
+                                value = height,
+                                onValueChange = { height = it.filter { ch -> ch.isDigit() } },
+                                modifier = Modifier.weight(1f),
+                                singleLine = true
+                            )
+
+                            Spacer(Modifier.width(8.dp))
+
+                            var expanded by remember { mutableStateOf(false) }
+
+                            Box {
+                                OutlinedButton(onClick = { expanded = true }) {
+                                    Text(heightUnit)
+                                }
+
+                                DropdownMenu(
+                                    expanded = expanded,
+                                    onDismissRequest = { expanded = false }
+                                ) {
+                                    listOf("cm", "ft").forEach {
+                                        DropdownMenuItem(
+                                            text = { Text(it) },
+                                            onClick = {
+                                                heightUnit = it
+                                                expanded = false
+                                            }
+                                        )
+                                    }
+                                }
+                            }
+                        }
+
+                        Spacer(Modifier.height(16.dp))
+
+                        // WEIGHT
+                        Text("Weight (kg)", style = MaterialTheme.typography.labelMedium)
 
                         OutlinedTextField(
                             value = weight,
-                            onValueChange = { weight = it },
-                            label = { Text("Weight") },
-                            modifier = Modifier.fillMaxWidth()
+                            onValueChange = { weight = it.filter { ch -> ch.isDigit() } },
+                            modifier = Modifier.fillMaxWidth(),
+                            singleLine = true
                         )
 
-                        Spacer(Modifier.height(10.dp))
+                        Spacer(Modifier.height(16.dp))
 
-                        OutlinedTextField(
-                            value = goal,
-                            onValueChange = { goal = it },
-                            label = { Text("Goal") },
-                            modifier = Modifier.fillMaxWidth()
-                        )
+                        // GOAL
+                        Text("Goal", style = MaterialTheme.typography.labelMedium)
 
-                        Spacer(Modifier.height(14.dp))
+                        var goalExpanded by remember { mutableStateOf(false) }
+
+                        Box {
+                            OutlinedButton(
+                                onClick = { goalExpanded = true },
+                                modifier = Modifier.fillMaxWidth()
+                            ) {
+                                Text(goal)
+                            }
+
+                            DropdownMenu(
+                                expanded = goalExpanded,
+                                onDismissRequest = { goalExpanded = false }
+                            ) {
+                                listOf(
+                                    "Gain Strength",
+                                    "Lose Weight",
+                                    "Build Endurance",
+                                    "Stay Fit"
+                                ).forEach {
+                                    DropdownMenuItem(
+                                        text = { Text(it) },
+                                        onClick = {
+                                            goal = it
+                                            goalExpanded = false
+                                        }
+                                    )
+                                }
+                            }
+                        }
+
+                        Spacer(Modifier.height(20.dp))
 
                         Button(
                             onClick = {
                                 scope.launch {
-                                    dataStore.saveProfile(name, height, weight, goal)
+                                    dataStore.saveProfile(
+                                        name,
+                                        height,
+                                        weight,
+                                        goal
+                                    )
                                 }
                                 isEditing = false
                                 isSaved = true
@@ -194,7 +270,6 @@ fun ProfileTab(
                 }
             }
 
-
             // ================= CALENDAR =================
             Text("Activity Calendar", style = MaterialTheme.typography.titleMedium)
 
@@ -204,32 +279,39 @@ fun ProfileTab(
                 columns = GridCells.Fixed(7),
                 modifier = Modifier.height(250.dp)
             ) {
-                items(days.size) { i ->
+                items(days) { day ->
 
-                    val day = days[i]
                     val isToday = day == today
+                    val hasNote = notes.containsKey(day.toString())
 
-                    Box(
-                        Modifier.padding(6.dp),
-                        contentAlignment = Alignment.Center
+                    Surface(
+                        shape = CircleShape,
+                        shadowElevation = if (isToday) 6.dp else 2.dp,
+                        color = if (isToday) Color(0xFF66BB6A) else Color.White,
+                        modifier = Modifier
+                            .padding(6.dp)
+                            .size(42.dp),
+                        onClick = {
+                            selectedDate = day
+                            noteText = notes[day.toString()] ?: ""
+                            showSheet = true
+                        }
                     ) {
-
-                        Surface(
-                            shape = CircleShape,
-                            shadowElevation = if (isToday) 6.dp else 2.dp,
-                            color = if (isToday)
-                                Color(0xFF66BB6A)
-                            else
-                                Color.White
+                        Column(
+                            horizontalAlignment = Alignment.CenterHorizontally,
+                            verticalArrangement = Arrangement.Center
                         ) {
+                            Text(
+                                "$day",
+                                color = if (isToday) Color.White else Color.Black
+                            )
 
-                            Box(
-                                Modifier.size(42.dp),
-                                contentAlignment = Alignment.Center
-                            ) {
-                                Text(
-                                    "$day",
-                                    color = if (isToday) Color.White else Color.Black
+                            if (hasNote) {
+                                Spacer(Modifier.height(2.dp))
+                                Box(
+                                    Modifier
+                                        .size(5.dp)
+                                        .background(Color.Red, CircleShape)
                                 )
                             }
                         }
@@ -237,61 +319,84 @@ fun ProfileTab(
                 }
             }
 
-
             Spacer(Modifier.height(20.dp))
 
-
-            // ================= LOGOUT =================
-            Row(
-                modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.Center
+            // LOGOUT
+            Button(
+                onClick = onLogout,
+                colors = ButtonDefaults.buttonColors(
+                    containerColor = Color(0xFFFFEBEE),
+                    contentColor = Color.Red
+                ),
+                shape = RoundedCornerShape(30.dp),
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(50.dp)
             ) {
-                Button(
-                    onClick = onLogout,
-                    colors = ButtonDefaults.buttonColors(Color.Red),
-                    shape = RoundedCornerShape(30.dp),
-                    modifier = Modifier
-                        .width(180.dp)
-                        .height(48.dp)
-                ) {
-                    Icon(Icons.Default.Logout, null)
-                    Spacer(Modifier.width(8.dp))
-                    Text("Logout")
-                }
+                Icon(Icons.AutoMirrored.Filled.Logout, null)
+                Spacer(Modifier.width(8.dp))
+                Text("Logout")
             }
 
             Spacer(Modifier.height(40.dp))
         }
     }
+
+    // ================= NOTE BOTTOM SHEET =================
+    if (showSheet && selectedDate != null) {
+
+        ModalBottomSheet(
+            onDismissRequest = { showSheet = false }
+        ) {
+            Column(
+                Modifier
+                    .fillMaxWidth()
+                    .padding(20.dp)
+            ) {
+
+                Text(
+                    "Notes for Day $selectedDate",
+                    style = MaterialTheme.typography.titleLarge
+                )
+
+                Spacer(Modifier.height(16.dp))
+
+                OutlinedTextField(
+                    value = noteText,
+                    onValueChange = { noteText = it },
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .height(120.dp),
+                    placeholder = { Text("Write your activity note...") }
+                )
+
+                Spacer(Modifier.height(20.dp))
+
+                Button(
+                    onClick = {
+                        scope.launch {
+                            dataStore.saveNote(
+                                selectedDate.toString(),
+                                noteText
+                            )
+                        }
+                        showSheet = false
+                    },
+                    modifier = Modifier.fillMaxWidth()
+                ) {
+                    Text("Save Note")
+                }
+
+                Spacer(Modifier.height(20.dp))
+            }
+        }
+    }
 }
 
-
-// ================= PROFILE ITEM COMPONENT =================
 @Composable
 fun ProfileItem(label: String, value: String) {
-
-    Column(
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(vertical = 8.dp)
-    ) {
-
-        Text(
-            text = label,
-            style = MaterialTheme.typography.labelMedium,
-            color = Color.Gray
-        )
-
-        Surface(
-            modifier = Modifier.fillMaxWidth(),
-            shape = RoundedCornerShape(10.dp),
-            color = Color(0xFFF1F5F9)
-        ) {
-            Text(
-                text = value.ifBlank { "-" },
-                modifier = Modifier.padding(14.dp),
-                style = MaterialTheme.typography.bodyLarge
-            )
-        }
+    Column(Modifier.padding(vertical = 6.dp)) {
+        Text(label, color = Color.Gray)
+        Text(value.ifBlank { "-" }, style = MaterialTheme.typography.bodyLarge)
     }
 }

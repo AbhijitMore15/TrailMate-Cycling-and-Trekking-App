@@ -14,7 +14,6 @@ private val Context.dataStore: DataStore<Preferences> by preferencesDataStore(
     name = "trailmate_prefs"
 )
 
-// ================= CLASS =================
 class DataStoreManager(private val context: Context) {
 
     companion object {
@@ -30,6 +29,9 @@ class DataStoreManager(private val context: Context) {
         private val HEIGHT_KEY = stringPreferencesKey("height")
         private val WEIGHT_KEY = stringPreferencesKey("weight")
         private val GOAL_KEY = stringPreferencesKey("goal")
+
+        // NOTES (NEW)
+        private val NOTES_KEY = stringPreferencesKey("daily_notes")
     }
 
     // =====================================================
@@ -47,7 +49,6 @@ class DataStoreManager(private val context: Context) {
         context.dataStore.edit { it[USER_ID_KEY] = userId }
     }
 
-    // ⭐ THIS FIXES YOUR ERROR
     val userIdFlow: Flow<Int?> =
         context.dataStore.data.map { it[USER_ID_KEY] }
 
@@ -98,6 +99,39 @@ class DataStoreManager(private val context: Context) {
                 weight = it[WEIGHT_KEY] ?: "",
                 goal = it[GOAL_KEY] ?: ""
             )
+        }
+
+    // =====================================================
+    // NOTES SECTION (NEW)
+    // =====================================================
+
+    suspend fun saveNote(date: String, note: String) {
+        context.dataStore.edit { prefs ->
+            val current = prefs[NOTES_KEY] ?: ""
+
+            val updated = current
+                .split("|")
+                .filter { it.isNotBlank() && !it.startsWith("$date=") }
+                .toMutableList()
+
+            if (note.isNotBlank()) {
+                updated.add("$date=$note")
+            }
+
+            prefs[NOTES_KEY] = updated.joinToString("|")
+        }
+    }
+
+    val notesFlow: Flow<Map<String, String>> =
+        context.dataStore.data.map { prefs ->
+            val raw = prefs[NOTES_KEY] ?: ""
+
+            raw.split("|")
+                .filter { it.contains("=") }
+                .associate {
+                    val parts = it.split("=")
+                    parts[0] to parts[1]
+                }
         }
 
     // =====================================================

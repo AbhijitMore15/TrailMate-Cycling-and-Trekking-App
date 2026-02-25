@@ -7,7 +7,7 @@ plugins {
 
 android {
     namespace = "com.trailmate.app"
-    compileSdk = 34
+    compileSdk = 35
 
     defaultConfig {
         applicationId = "com.trailmate.app"
@@ -89,6 +89,7 @@ dependencies {
 
     // ---------- DATASTORE ----------
     implementation("androidx.datastore:datastore-preferences:1.0.0")
+    implementation(libs.androidx.compose.foundation)
 
     // ---------- TEST ----------
     testImplementation("junit:junit:4.13.2")
