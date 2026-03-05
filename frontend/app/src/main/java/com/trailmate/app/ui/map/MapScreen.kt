@@ -31,6 +31,9 @@ import java.net.URL
 import java.util.Locale
 import kotlin.math.roundToInt
 
+import com.trailmate.app.repository.ActivityRepository
+import com.trailmate.app.models.Activity
+
 @SuppressLint("MissingPermission")
 @Composable
 fun MapScreen() {
@@ -44,15 +47,19 @@ fun MapScreen() {
     var destinationPoint by remember { mutableStateOf<GeoPoint?>(null) }
     var autoCenter by remember { mutableStateOf(false) }
 
-    // ---------- ROUTE STATS STATE ----------
+    /// ACTIVITY STATE (NEW)
+    var activityStarted by remember { mutableStateOf(false) }
+    var activityMode by remember { mutableStateOf("Cycling") }
+    var startTime by remember { mutableLongStateOf(0L) }
+
+    // ---------- ROUTE STATS ----------
     var distanceMeters by remember { mutableFloatStateOf(0f) }
     var steps by remember { mutableIntStateOf(0) }
     var pedals by remember { mutableIntStateOf(0) }
     var minutes by remember { mutableIntStateOf(0) }
 
-    val fusedLocationClient = remember {
-        LocationServices.getFusedLocationProviderClient(context)
-    }
+    val fusedLocationClient =
+        remember { LocationServices.getFusedLocationProviderClient(context) }
 
     val geocoder = remember { Geocoder(context, Locale.getDefault()) }
     val mapView = remember { MapView(context) }
@@ -113,8 +120,7 @@ fun MapScreen() {
 
             val size = 28
             val bmp = android.graphics.Bitmap.createBitmap(
-                size,
-                size,
+                size, size,
                 android.graphics.Bitmap.Config.ARGB_8888
             )
 
@@ -125,12 +131,7 @@ fun MapScreen() {
                 isAntiAlias = true
             }
 
-            canvas.drawCircle(
-                size / 2f,
-                size / 2f,
-                size / 2f,
-                paint
-            )
+            canvas.drawCircle(size / 2f, size / 2f, size / 2f, paint)
 
             icon = android.graphics.drawable.BitmapDrawable(
                 context.resources,
@@ -291,6 +292,7 @@ fun MapScreen() {
                 .fillMaxWidth(.9f),
             shadowElevation = 8.dp
         ) {
+
             OutlinedTextField(
                 value = searchText,
                 onValueChange = { searchText = it },
@@ -305,7 +307,88 @@ fun MapScreen() {
             )
         }
 
-        /// ROUTE STATS PANEL
+        /// ACTIVITY CONTROLS (NEW)
+        if (destinationPoint != null) {
+
+            Card(
+                modifier = Modifier
+                    .align(Alignment.TopCenter)
+                    .padding(top = 160.dp)
+                    .fillMaxWidth(.9f)
+            ) {
+
+                Column(
+                    Modifier.padding(14.dp),
+                    verticalArrangement = Arrangement.spacedBy(10.dp)
+                ) {
+
+                    Row(verticalAlignment = Alignment.CenterVertically) {
+
+                        Text("Mode:")
+
+                        Spacer(Modifier.width(10.dp))
+
+                        FilterChip(
+                            selected = activityMode == "Cycling",
+                            onClick = { activityMode = "Cycling" },
+                            label = { Text("🚴 Cycling") }
+                        )
+
+                        Spacer(Modifier.width(8.dp))
+
+                        FilterChip(
+                            selected = activityMode == "Trekking",
+                            onClick = { activityMode = "Trekking" },
+                            label = { Text("🥾 Trekking") }
+                        )
+                    }
+
+                    Button(
+                        onClick = {
+
+                            if (!activityStarted) {
+
+                                activityStarted = true
+                                startTime = System.currentTimeMillis()
+
+                            } else {
+
+                                activityStarted = false
+
+                                val duration =
+                                    ((System.currentTimeMillis() - startTime) / 60000).toInt()
+
+                                val km = distanceMeters / 1000.0
+
+                                ActivityRepository.addActivity(
+                                    Activity(
+                                        id = 0,
+                                        routeId = 0,
+                                        userId = 0,
+                                        distance = km,
+                                        time = duration,
+                                        steps = steps,
+                                        pedals = pedals,
+                                        durationMin = duration,
+                                        type = activityMode,
+                                        timestamp = System.currentTimeMillis().toString()
+                                    )
+                                )
+                            }
+                        },
+                        modifier = Modifier.fillMaxWidth()
+                    ) {
+
+                        if (!activityStarted)
+                            Text("Start Activity")
+                        else
+                            Text("Finish Activity")
+                    }
+                }
+            }
+        }
+
+        /// ROUTE STATS
         if (distanceMeters > 0f) {
 
             val km = distanceMeters / 1000f
@@ -313,12 +396,12 @@ fun MapScreen() {
             Card(
                 modifier = Modifier
                     .align(Alignment.BottomStart)
-                    .padding(start = 16.dp, bottom = 120.dp),
-                elevation = CardDefaults.cardElevation(10.dp)
+                    .padding(start = 16.dp, bottom = 120.dp)
             ) {
+
                 Column(Modifier.padding(14.dp)) {
 
-                    Text("Route Stats", style = MaterialTheme.typography.titleMedium)
+                    Text("Route Stats")
 
                     Spacer(Modifier.height(6.dp))
 

@@ -8,13 +8,14 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.*
 import androidx.compose.material3.*
-import androidx.compose.runtime.Composable
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
+import com.trailmate.app.repository.ActivityRepository
 
 @Composable
 fun ActivityTab(navController: NavController) {
@@ -37,7 +38,7 @@ fun ActivityTab(navController: NavController) {
             )
         }
 
-        /// RECENT
+        /// RECENT ACTIVITIES
         item {
             SectionHeader("Recent Activities")
             ActivityHistoryList()
@@ -45,6 +46,7 @@ fun ActivityTab(navController: NavController) {
 
         /// TOOLS
         item {
+
             SectionHeader("Tools")
 
             Column(
@@ -52,15 +54,24 @@ fun ActivityTab(navController: NavController) {
                 modifier = Modifier.padding(top = 6.dp)
             ) {
 
-                ToolCard("Equipment Recommendation", Icons.Default.DirectionsBike) {
+                ToolCard(
+                    "Equipment Recommendation",
+                    Icons.Default.DirectionsBike
+                ) {
                     navController.navigate("equipment?from=activity")
                 }
 
-                ToolCard("Calories Calculator", Icons.Default.LocalFireDepartment) {
+                ToolCard(
+                    "Calories Calculator",
+                    Icons.Default.LocalFireDepartment
+                ) {
                     navController.navigate("calories?from=activity")
                 }
 
-                ToolCard("Calories History", Icons.Default.History) {
+                ToolCard(
+                    "Calories History",
+                    Icons.Default.History
+                ) {
                     navController.navigate("calories_history?from=activity")
                 }
             }
@@ -69,12 +80,14 @@ fun ActivityTab(navController: NavController) {
 }
 
 //////////////////////////////////////////////////////////////
-// HEADER
+// SECTION HEADER
 //////////////////////////////////////////////////////////////
 
 @Composable
 fun SectionHeader(title: String) {
+
     Column {
+
         Text(
             text = title,
             style = MaterialTheme.typography.titleLarge,
@@ -83,7 +96,7 @@ fun SectionHeader(title: String) {
 
         Spacer(Modifier.height(4.dp))
 
-        Divider(
+        HorizontalDivider(
             thickness = 1.dp,
             color = MaterialTheme.colorScheme.outlineVariant
         )
@@ -113,7 +126,7 @@ fun ToolCard(
             verticalAlignment = Alignment.CenterVertically
         ) {
 
-            /// ICON CONTAINER
+            /// ICON BOX
             Box(
                 modifier = Modifier
                     .size(44.dp)
@@ -123,6 +136,7 @@ fun ToolCard(
                     ),
                 contentAlignment = Alignment.Center
             ) {
+
                 Icon(
                     imageVector = icon,
                     contentDescription = null,
@@ -133,6 +147,7 @@ fun ToolCard(
             Spacer(Modifier.width(16.dp))
 
             Column {
+
                 Text(
                     title,
                     style = MaterialTheme.typography.titleMedium,
@@ -164,26 +179,30 @@ fun ToolCard(
 @Composable
 fun ActivityHistoryList() {
 
-    val fakeData = listOf(
-        "Cycling — 2.3 km — 12 min",
-        "Trekking — 1.1 km — 20 min"
-    )
+    val activities by ActivityRepository.activities.collectAsState()
 
     Column(verticalArrangement = Arrangement.spacedBy(10.dp)) {
 
-        fakeData.forEach { activity ->
+        /// SHOW MESSAGE IF EMPTY
+        if (activities.isEmpty()) {
+
+            Text(
+                "No activities yet.\nStart one from the Map!",
+                style = MaterialTheme.typography.bodyMedium,
+                color = Color.Gray
+            )
+
+            return@Column
+        }
+
+        /// SHOW ACTIVITIES
+        activities.forEach { activity ->
 
             val icon =
-                when {
-                    activity.contains("Cycling", true) ->
-                        Icons.Default.DirectionsBike
-
-                    activity.contains("Trekking", true) ->
-                        Icons.Default.Terrain
-
-                    else ->
-                        Icons.Default.DirectionsRun
-                }
+                if (activity.type == "Cycling")
+                    Icons.Default.DirectionsBike
+                else
+                    Icons.Default.Terrain
 
             ElevatedCard(
                 shape = RoundedCornerShape(16.dp),
@@ -199,6 +218,7 @@ fun ActivityHistoryList() {
                     verticalAlignment = Alignment.CenterVertically
                 ) {
 
+                    /// ICON
                     Box(
                         modifier = Modifier
                             .size(36.dp)
@@ -208,6 +228,7 @@ fun ActivityHistoryList() {
                             ),
                         contentAlignment = Alignment.Center
                     ) {
+
                         Icon(
                             icon,
                             contentDescription = null,
@@ -217,8 +238,10 @@ fun ActivityHistoryList() {
 
                     Spacer(Modifier.width(14.dp))
 
+                    /// ACTIVITY TEXT
                     Text(
-                        text = activity,
+                        "${activity.type} — %.2f km — ${activity.durationMin} min"
+                            .format(activity.distance),
                         style = MaterialTheme.typography.bodyMedium,
                         fontWeight = FontWeight.Medium
                     )

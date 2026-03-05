@@ -182,5 +182,61 @@
         "duration": 2.0,
         "distance": 5.0,
         "calories": 1820.0
+    },
+    {
+        "user_id": 8,
+        "activity": "trekking",
+        "weight": 70.0,
+        "duration": 1.0,
+        "distance": 2.0,
+        "calories": 637.0
+    },
+    {
+        "user_id": 8,
+        "activity": "trekking",
+        "weight": 70.0,
+        "duration": 2.0,
+        "distance": 1.0,
+        "calories": 1092.0
+    },
+    {
+        "user_id": 8,
+        "activity": "trekking",
+        "weight": 70.0,
+        "duration": 3.0,
+        "distance": 5.0,
+        "calories": 2730.0
+    },
+    {
+        "user_id": 8,
+        "activity": "trekking",
+        "weight": 70.0,
+        "duration": 1.0,
+        "distance": 1.0,
+        "calories": 546.0
+    },
+    {
+        "user_id": 8,
+        "activity": "trekking",
+        "weight": 65.0,
+        "duration": 2.0,
+        "distance": 5.0,
+        "calories": 1690.0
+    },
+    {
+        "user_id": 8,
+        "activity": "trekking",
+        "weight": 70.0,
+        "duration": 2.0,
+        "distance": 5.0,
+        "calories": 1820.0
+    },
+    {
+        "user_id": 8,
+        "activity": "cycling",
+        "weight": 70.0,
+        "duration": 2.0,
+        "distance": 5.0,
+        "calories": 1400.0
     }
 ]

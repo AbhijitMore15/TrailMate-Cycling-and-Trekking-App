@@ -8,5 +8,8 @@ data class Activity(
     val time: Int,
     val steps: Int,
     val pedals: Int,
+    val durationMin: Int,
+    val type: String,
     val timestamp: String
+
 )
