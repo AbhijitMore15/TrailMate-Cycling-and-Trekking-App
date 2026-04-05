@@ -28,7 +28,6 @@ TrailMate is a modern, user-friendly application designed for cycling and trekki
 
 ### 🌐 Interactive UI
 
-* 3D trail visualization (if applicable)
 * Smooth and responsive interface
 * Clean and modern design
 
@@ -128,8 +127,6 @@ npm start
 * AI-based trail recommendations
 * Social features (share routes, follow users)
 * Offline maps support
-* Weather integration
-* Fitness insights using ML
 
 ---
 
